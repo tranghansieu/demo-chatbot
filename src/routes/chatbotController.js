@@ -67,13 +67,23 @@ let getWebhook = (req, res) => {
 };
 function handleMessage(sender_psid, received_message) {
   let response;
-
   // Checks if the message contains text
   if (received_message.text) {
     // Create the payload for a basic text message, which
     // will be added to the body of our request to the Send API
+    let response_message;
+    var spawn = require('child_process').spawn;
+    //123
+    var process = spawn('python', [
+      './ai.py',
+      received_message,
+    ]);
+    process.stdout.on('data', function(data) {
+      console.log(data.toString());
+      response_message = data.toString();
+    });
     response = {
-      "text": `Bạn vừa nhắn là: "${received_message.text}". Hãy gửi cho mình một bức ảnh mà đó là thứ bạn cần!`
+      "text": response_message 
     }
   } else if (received_message.attachments) {
     // Get the URL of the message attachment
